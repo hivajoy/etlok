@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StarTech Dashboard</title>
+  <style>
+    /* latin */
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyKS6BoWgz.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #000010;
+      color: #0ff;
+    }
+
+    .dashboard {
+      display: grid;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .sidebar {
+      position: fixed;
+      width: 260px;
+      height:100vh;
+      z-index:999;
+      background: rgba(0, 255, 255, 0.05);
+      border-right: 2px solid #0ff;
+      padding: 30px 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #0ff;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      margin: 20px 0;
+      padding: 10px 15px;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    .sidebar ul li:hover {
+      border-left: 3px solid #0ff;
+      background: rgba(0, 255, 255, 0.1);
+    }
+
+    .main {
+      flex: 1;
+      padding: 5px 0px;
+      padding-left:270px;
+      display:grid;
+        justify-content:center;
+    }
+
+    .main h1 {
+      font-size: 28px;
+      color: #0ff;
+      margin-bottom: 30px;
+    }
+     /* Preloader styles */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    /* Simple loading spinner */
+    .loader {
+      border: 4px solid black;
+      border-top: 4px solid #0ff;
+      border-right: 4px solid #0ff;
+      border-bottom: 4px solid #0ff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+      .burger {
+  display: none;
+  position: fixed;
+  top: 5px;
+  left: 10px;
+  font-size: 28px;
+  color: #0ff;
+  background: none;
+  border: none;
+  z-index: 1001;
+  cursor: pointer;
+}
+    
+ .back-div {
+      padding-left:270px;
+      padding-top:5px;
+      
+    }
+     
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        height: 100%;
+        background: black;
+        z-index: 1000;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .burger {
+        display: block;
+      }
+
+      .main {
+        padding: 10px 0px;
+        display:flex;
+        justify-content:center;
+      }
+      .back-btn {
+        margin-top:40px;
+        margin-left:10px;
+      }
+      .back-div {
+      padding-left:0px;
+      
+    }
+      
+    }
+   
+    .back-btn {
+  background: transparent;
+  border: 1px solid #0ff;
+  color: #0ff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+.back-btn:hover {
+  background: rgba(0, 255, 255, 0.1);
+}
+body {
+  overflow: auto;                /* Allow scrolling */
+  -ms-overflow-style: none;      /* IE and Edge */
+  scrollbar-width: none;         /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none;                 /* Chrome, Safari, and Edge (WebKit) */
+}
+    .sidebar.open + .main .burger {
+  display: none;
+}
+  </style>
+</head>
+<body>
+  <button class="burger" id="burger" onclick="toggleSidebar()">☰</button>
+  <div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">STARTECH</div>
+      <ul>
+        <li onclick="navigateWithLoading('/')">Galactic Console</li>
+        <li>Hyperspace Files</li>
+        <li>AI Drone Logs</li>
+        <li>Ship Configuration</li>
+        <li>Quantum Storage</li>
+      </ul>
+    </aside>
+    <div class="main">
+      <html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIVA - Virtual Assistant</title>
+    <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap");
+
+
+    .mainn {
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        text-align: center;
+        animation: glow 2s infinite alternate;
+        width: 60vw;
+        max-width: 800px;
+    }
+
+    /* Image Container */
+    .mainn .image-container {
+        padding: 20px;
+        animation: fadeIn 1s ease;
+    }
+
+    .mainn .image-container img {
+        width: 180px;
+        border-radius: 50%;
+        border: 2px solid #00bcd4;
+        box-shadow: 0 6px 30px rgba(0, 252, 255, 0.5);
+        transition: transform 0.3s ease;
+    }
+
+    .mainn .image-container img:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 40px rgba(0, 252, 255, 0.8);
+    }
+
+    /* Main Heading */
+    .mainn h1 {
+        color: #00ffcc;
+        font-size: 48px;
+        letter-spacing: 8px;
+        margin-bottom: 20px;
+        text-shadow: 0px 0px 10px rgba(0, 255, 204, 0.8);
+    }
+
+    .mainn p {
+        color: #d1d1d1;
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+
+    /* Input and Button */
+    .mainn .input-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 40px;
+        padding: 10px 20px;
+        width: 70%;
+        margin: 0 auto;
+        box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.5);
+    }
+
+    .mainn .input {
+        flex: 1;
+        border-radius: 30px;
+        padding: 10px;
+        background: transparent;
+        border: 2px solid #00ffcc;
+        color: #fff;
+        font-size: 18px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .mainn .input:focus {
+        outline: none;
+        background: rgba(0, 255, 204, 0.1);
+        box-shadow: 0px 0px 10px rgba(0, 255, 204, 0.7);
+    }
+
+    .mainn .talk {
+        background: linear-gradient(135deg, #00bcd4, #00ffcc);
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        margin-left: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.3s;
+        box-shadow: 0px 5px 20px rgba(0, 255, 204, 0.5);
+    }
+
+    .mainn .talk:hover {
+        transform: scale(1.15);
+        background: linear-gradient(135deg, #00ffcc, #00bcd4);
+        box-shadow: 0px 10px 30px rgba(0, 255, 204, 0.7);
+    }
+
+    .mainn .talk i {
+        font-size: 25px;
+        color: #fff;
+    }
+
+    #voiceSelect {
+        background: rgba(0, 255, 204, 0.2);
+        border: 1px solid #00bcd4;
+        color: #00ffcc;
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 20px;
+        width: 40%;
+        font-size: 16px;
+    }
+
+    .response {
+        margin-top: 20px;
+        font-size: 20px;
+        color: #00ffcc;
+        opacity: 0;
+        text-align:left;
+        transition: opacity 0.5s ease;
+    }
+
+    .response.active {
+        opacity: 1;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .mainn {
+            width: 85vw;
+            padding: 20px;
+        }
+
+        .mainn h1 {
+            font-size: 32px;
+            letter-spacing: 4px;
+        }
+
+        .mainn p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .mainn .input-container {
+            width: 90%;
+            padding: 5px 15px;
+        }
+
+        .mainn .input {
+            font-size: 16px;
+        }
+
+        .mainn .talk {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+        }
+
+        #voiceSelect {
+            width: 60%;
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .mainn h1 {
+            font-size: 28px;
+        }
+
+        .mainn p {
+            font-size: 14px;
+        }
+
+        .mainn .input-container {
+            width: 100%;
+        }
+
+        .mainn .input {
+            font-size: 14px;
+        }
+
+        .mainn .talk {
+            width: 40px;
+            height: 40px;
+            margin-left: 5px;
+        }
+
+        #voiceSelect {
+            width: 80%;
+            font-size: 12px;
+        }
+    }
+</style>
+</head>
+
+<body>
+    <section class="mainn">
+        <div class="image-container">
+            <img src="https://cdn.dribbble.com/users/2856052/screenshots/5657420/__-1.gif" alt="JARVIS">
+            <h1>H I V A</h1>
+            <p>I am a Virtual Assistant HIVA, how may I help you?</p>
+        </div>
+        <div class="input-container">
+            <input type="text" class="input" id="userInput" placeholder="Type your question here...">
+            <button class="talk"><i class="fas fa-microphone-alt"></i></button>
+        </div>
+        <select id="voiceSelect"></select> <!-- Dropdown for voice selection -->
+        <div class="response" id="responseText"></div><!-- Add this in your body inside the .response div or wherever you'd like -->
+<div id="loading" style="display: none; color: #00ffcc; font-size: 20px;">Loading...</div>
+
+    </section>
+
+     <script>
+        const btn = document.querySelector('.talk');
+        const inputField = document.getElementById('userInput');
+        const responseText = document.getElementById('responseText');
+        const voiceSelect = document.getElementById('voiceSelect');
+       // Initialize voice options
+window.speechSynthesis.onvoiceschanged = populateVoiceList;
+
+let voices = [];
+
+function populateVoiceList() {
+    voices = speechSynthesis.getVoices();
+    voiceSelect.innerHTML = ''; // Clear existing voices
+
+    voices.forEach((voice) => {
+        // Filter voices with Hindi language (hi-IN or other variants)
+        if (voice.lang.startsWith('hi')) {
+            const option = document.createElement('option');
+            option.value = voice.name;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            voiceSelect.appendChild(option);
+        }
+    });
+
+    // Set default to the first Hindi voice (if available)
+    if (voiceSelect.options.length > 0) {
+        voiceSelect.value = voiceSelect.options[0].value;
+    }
+}
+
+function speak(text) {
+    const textSpeak = new SpeechSynthesisUtterance(text);
+    const selectedVoice = voiceSelect.value;
+
+    // Set the selected Hindi voice or default to the first available voice
+    textSpeak.voice = voices.find(voice => voice.name === selectedVoice) || voices[0];
+    textSpeak.rate = 1.18;
+    textSpeak.volume = 1;
+    textSpeak.pitch = 1;
+
+    // Show the response text and keep it visible until speech ends
+    responseText.textContent = text;
+    responseText.style.opacity = 1;
+
+    // When the speech ends, hide the text
+    textSpeak.onend = () => {
+        responseText.style.opacity = 0; // Hide the text after speech ends
+    };
+
+    window.speechSynthesis.speak(textSpeak);
+}
+
+
+        function wishMe() {
+            const hour = new Date().getHours();
+            if (hour < 12) {
+                speak("Good Morning Boss...");
+            } else if (hour < 17) {
+                speak("Good Afternoon Master...");
+            } else {
+                speak("Good Evening Sir...");
+            }
+        }
+
+        window.addEventListener('load', () => {
+            speak("Initializing Hiva...");
+            wishMe();
+        });
+
+        // Check for Speech Recognition API support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            speak("Sorry, your browser does not support speech recognition.");
+        }
+        const recognition = new SpeechRecognition();
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            inputField.value = transcript; // Set the input field with the transcript
+            takeCommand(transcript.toLowerCase());
+        };
+
+        btn.addEventListener('click', () => {
+            inputField.value = ""; // Clear input field before listening
+            recognition.start();
+        });
+
+        inputField.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const message = inputField.value.toLowerCase();
+                takeCommand(message);
+                inputField.value = ""; // Clear input field after submitting
+            }
+        });
+
+        async function takeCommand(message) {
+    if (message.includes('hey') || message.includes('hello')) {
+        speak("Hello Sir, How May I Help You?");
+    } else if (message.includes('who is shivam')) {
+        speak("Shivam is my Master."); 
+    } else if (message.includes('who is aarav')) {
+        speak("Aarav ek pagal ladka hai."); 
+    } else if (message.includes("open google")) {
+        window.open("https://google.com", "_blank");
+        speak("Opening Google...");
+    } else if (message.includes("open youtube")) {
+        window.open("https://youtube.com", "_blank");
+        speak("Opening YouTube...");
+    } else if (message.includes("open facebook")) {
+        window.open("https://facebook.com", "_blank");
+        speak("Opening Facebook...");
+    } else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
+        window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+        speak(`This is what I found on the internet regarding ${message}`);
+    } else if (message.includes('wikipedia')) {
+        window.open(`https://en.wikipedia.org/wiki/${message.replace("wikipedia", "").trim()}`, "_blank");
+        speak(`This is what I found on Wikipedia regarding ${message}`);
+    } else if (message.includes('time')) {
+        const time = new Date().toLocaleString(undefined, {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true // Ensures 12-hour format with AM/PM
+        });
+        speak(`अभी का समय है ${time}`);
+    } else if (message.includes('date')) {
+        const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric" });
+        speak(`आज की तारीख है ${date}`);
+    } else if (message.includes('calculator')) {
+        window.open('Calculator:///');
+        speak("Opening Calculator");
+    } else if (message.includes('weather')) {
+        // Example: Fetch weather data from an API
+        fetchWeatherData().then(weather => {
+            speak(`आज का मौसम ${weather.temperature} डिग्री सेल्सियस है और ${weather.condition} है।`);
+        });
+    } else if (message.includes('news')) {
+        // Example: Fetch news data from an API
+        fetchNewsData().then(news => {
+            speak(`आज के प्रमुख समाचार ये हैं: ${news.headlines.join(', ')}`);
+        });
+    } else if (message.includes('reminder')) {
+        const reminder = extractReminder(message);
+        setReminder(reminder).then(() => {
+            speak(`आपका रिमाइंडर '${reminder}' सेट कर दिया गया है।`);
+        });
+    } else if (message.includes('joke')) {
+        // Send a random joke
+        fetchRandomJoke().then(joke => {
+            speak(`यहां एक मजेदार मजाक है: ${joke}`);
+        });
+    } else if (message.includes('motivation')) {
+        const motivationalQuotes = [
+            "आप जो भी कर सकते हैं, उसे करने का प्रयास करें।",
+            "सफलता अंतिम नहीं है, असफलता fatal नहीं है: जो मायने रखता है वह है प्रयास जारी रखना।",
+            "आपकी सोच आपकी वास्तविकता बनाती है।"
+        ];
+        const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+        speak(randomQuote);
+    } else {
+        // Show loading message
+        const loadingIndicator = document.getElementById('loading');
+        loadingIndicator.style.display = 'block'; // Show the loading message
+
+        const apiUrl = `https://geminipro.ukefuehatwo.workers.dev/?message=${message}`;
+        try {
+            // Make the API request
+            const response = await axios.get(apiUrl);
+            
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none'; // Hide the loading message
+            
+            // Speak the response
+            speak(response.data.response); // Use the value of response.data.response
+        } catch (error) {
+            // Hide loading indicator if an error occurs
+            loadingIndicator.style.display = 'none'; // Hide the loading message
+            console.error("Error fetching data:", error);
+            speak("Sorry, there was an error fetching the data.");
+        }
+    }
+}
+
+
+        async function fetchWeatherData() {
+            return {
+                temperature: 25,
+                condition: "धूप"
+            };
+        }
+
+        async function fetchNewsData() {
+            return {
+                headlines: ["समाचार 1", "समाचार 2", "समाचार 3"]
+            };
+        }
+
+        function extractReminder(message) {
+            return message.replace(/.*remind me to (.+)/, '$1').trim();
+        }
+
+        async function setReminder(reminder) {
+            return new Promise(resolve => {
+                setTimeout(resolve, 1000);
+            });
+        }
+
+        async function fetchRandomJoke() {
+            return "एक आदमी डॉक्टर के पास गया और कहा, 'डॉक्टर, मुझे भूलने की बीमारी है!' डॉक्टर ने कहा, 'कब से?' आदमी बोला, 'कब से क्या?''";
+        }
+    </script>
+</body>
+</html>
+    </div>
+  </div>
+  
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader"></div>
+  </div>
+  <script>
+    function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const burger = document.getElementById('burger');
+
+    sidebar.classList.toggle('open');
+
+    // Toggle icon text between ☰ and ×
+    if (sidebar.classList.contains('open')) {
+      burger.innerText = '×'; // Close icon
+    } else {
+      burger.innerText = '☰'; // Menu icon
+    }
+  }
+        function goBack() {
+  window.history.back();
+}
+  function onClick(openLink = '') {
+  if (openLink) {
+    window.location.href = openLink; // Opens in the same page
+  } else {
+    console.warn('No link provided to open.');
+  }
+}
+  // Hide preloader when page finishes loading
+    window.addEventListener('load', function () {
+      document.getElementById('preloader').style.display = 'none';
+    });
+
+    // Show loading spinner on click before navigating
+    function navigateWithLoading(url) {
+      const preloader = document.getElementById('preloader');
+      preloader.style.display = 'flex'; // Show spinner again
+
+      // Add a small delay to let the spinner be visible before navigation
+      setTimeout(() => {
+        window.location.href = url;
+      }, 100); // You can increase this delay if needed
+    }
+  </script>
+</body>
+</html>
